@@ -1,0 +1,5 @@
+name: Labirinthian
+version: '${project.version}'
+main: it.labirinthian.labirinthian.Labirinthian
+api-version: 1.17
+authors: [ Jammone ]
