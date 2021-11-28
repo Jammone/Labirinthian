@@ -1,6 +1,7 @@
 package Commands;
 
 
+import Commands.MyCommands.Status;
 import it.labirinthian.labirinthian.Labirinthian;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -21,6 +22,7 @@ public class CommandHandler implements CommandExecutor {
         subCommands = new ArrayList<>();
         subCommandsByClass = new HashMap<>();
         registerSubCommand(new HelpCommand());
+        registerSubCommand(new Status());
     }
 
     public void registerSubCommand(SubCommand subCommand) {

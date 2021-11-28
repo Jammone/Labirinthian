@@ -1,5 +1,11 @@
 package it.labirinthian.labirinthian;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.*;
 import java.awt.*;
 
@@ -136,33 +142,169 @@ public class Maze{
 
     }
 
-    public void printMaze(){
+    public Vertex[][] getMaze() {
+        return maze;
+    }
+
+    public void setMaze(Vertex[][] maze) {
+        this.maze = maze;
+    }
+
+    public void printMaze(Location loc) {
         int D = 4;
+        Location aux = loc;
+        Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(loc).setType(Material.ACACIA_LOG);
+        Location locl;
+        Location locr;
+        Location locf;
+        Location locb;
+        Location diag1;
+        Location diag2;
+        Location diag3;
+        Location diag4;
 
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                boolean isStart = (start.getP().x == i && start.getP().y == j);
-                boolean isEnd = (end.getP().x == i && end.getP().y == j);
-
-                LinkedList<Pair> neighbors = maze[i][j].getNeighbors();
-                if( !neighbors.contains(new Pair(i-1,j)))
-                    System.out.print("-");
-                if( !neighbors.contains(new Pair(i+1,j)))
-                    System.out.print("-");
-                if( !neighbors.contains(new Pair(i,j-1)))
-                    System.out.print("|");
-                if( !neighbors.contains(new Pair(i,j+1)))
-                    System.out.print("|");
-
-                if(isStart){
-                    System.out.print("*");
-                }
-
-                if(isEnd) {
-                    System.out.print("*");
-                }
+        int i = 0;
+        int j = 0;
+        Location asdf;
+        asdf = new Location(loc.getWorld(), loc.getX() , loc.getY(), loc.getZ() );
+        for (int ax1 = 0; ax1 < 2 * width; ax1++){
+            for (int ax2 = 0; ax2 < 2 * width; ax2++) {
+                asdf = new Location(loc.getWorld(), loc.getX() + ax1, loc.getY() + 3, loc.getZ() + ax2);
+                Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(asdf).setType(Material.AIR);
+                asdf = new Location(loc.getWorld(), loc.getX() + ax1, loc.getY() + 1, loc.getZ() + ax2);
+                Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(asdf).setType(Material.AIR);
+                asdf = new Location(loc.getWorld(), loc.getX() + ax1, loc.getY() + 2, loc.getZ() + ax2);
+                Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(asdf).setType(Material.AIR);
+                asdf = new Location(loc.getWorld(), loc.getX() + ax1, loc.getY(), loc.getZ() + ax2);
+                Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(asdf).setType(Material.AIR);
             }
         }
+
+        while(true){
+                //Bukkit.getScheduler().scheduleSyncDelayedTask(Labirinthian.getInstance(),new myTask(i,j,aux),80+30*i+30*j);
+                boolean isStart = (start.getP().x == i && start.getP().y == j);
+                boolean isEnd = (end.getP().x == i && end.getP().y == j);
+                LinkedList<Pair> neighbors = maze[i][j].getNeighbors();
+                //System.out.println("neighbors size: " + neighbors.size());
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(aux).setType(Material.POLISHED_DIORITE);
+                if (!neighbors.contains(new Pair(i, j + 1))){
+                    //Bukkit.getPlayer("Nonick").sendMessage(ChatColor.YELLOW+""+ "   il blocco [" +i +"] [" +j+"+1]("+i+","+(j+1)+") è muro");
+
+                    locl = new Location(aux.getWorld(), aux.getX(), aux.getY()+3, aux.getZ()+1);
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locl).setType(Material.STONE_BRICKS);
+                    locl = new Location(aux.getWorld(), aux.getX(), aux.getY()+1, aux.getZ()+1);
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locl).setType(Material.STONE_BRICKS);
+                    locl = new Location(aux.getWorld(), aux.getX(), aux.getY()+2, aux.getZ()+1);
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locl).setType(Material.STONE_BRICKS);
+                }
+                if( !neighbors.contains(new Pair(i,j-1))) {
+                    //Bukkit.getPlayer("Nonick").sendMessage(ChatColor.YELLOW+""+ "   il blocco [" +i +"] [" +(j)+"-1]("+i+ ","+(j-1)+") è muro");
+                    locr = new Location(aux.getWorld(), aux.getX(), aux.getY()+2, aux.getZ()-1);
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locr).setType(Material.STONE_BRICKS);
+                    locr = new Location(aux.getWorld(), aux.getX(), aux.getY()+1, aux.getZ()-1);
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locr).setType(Material.STONE_BRICKS);
+                    locr = new Location(aux.getWorld(), aux.getX(), aux.getY()+3, aux.getZ()-1);
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locr).setType(Material.STONE_BRICKS);
+                }
+                if( !neighbors.contains(new Pair(i-1,j))) {
+                    //Bukkit.getPlayer("Nonick").sendMessage(ChatColor.YELLOW+""+ "   il blocco [" +i +"-1] [" +(j)+"] ("+(i-1)+ ","+j+") è muro");
+                    locb = new Location(aux.getWorld(), aux.getX()-1, aux.getY()+1, aux.getZ() );
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).setType(Material.STONE_BRICKS);
+                    locb = new Location(aux.getWorld(), aux.getX()-1, aux.getY()+2, aux.getZ() );
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).setType(Material.STONE_BRICKS);
+                    locb = new Location(aux.getWorld(), aux.getX()-1, aux.getY()+3, aux.getZ() );
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).setType(Material.STONE_BRICKS);
+                }
+                if( !neighbors.contains(new Pair(i+1,j))) {
+                    //Bukkit.getPlayer("Nonick").sendMessage(ChatColor.YELLOW+""+ "   il blocco  [" +i +"+1] [" +(j)+"] ("+(i+1)+ ","+j+") è muro");
+                    locf = new Location(aux.getWorld(), aux.getX()+1, aux.getY()+3, aux.getZ());
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).setType(Material.STONE_BRICKS);
+                    locf = new Location(aux.getWorld(), aux.getX()+1, aux.getY()+1, aux.getZ());
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).setType(Material.STONE_BRICKS);
+                    locf = new Location(aux.getWorld(), aux.getX()+1, aux.getY()+2, aux.getZ());
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).setType(Material.STONE_BRICKS);
+                }
+
+                //fill the cross spaces
+                locl = new Location(aux.getWorld(), aux.getX(), aux.getY(), aux.getZ()+1);
+                if(Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locl).getType().equals(Material.AIR))
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locl).setType(Material.POLISHED_DIORITE);
+                locr = new Location(aux.getWorld(), aux.getX(), aux.getY(), aux.getZ()-1);
+                if(Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locr).getType().equals(Material.AIR)) Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locr).setType(Material.DIAMOND_BLOCK);
+                locb = new Location(aux.getWorld(), aux.getX()-1, aux.getY(), aux.getZ() );
+                if(Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).getType().equals(Material.AIR))
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).setType(Material.POLISHED_DIORITE);
+                locf = new Location(aux.getWorld(), aux.getX()+1, aux.getY(), aux.getZ());
+                if(Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).getType().equals(Material.AIR))
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).setType(Material.POLISHED_DIORITE);
+                //fill the diag spaces
+                diag1 =new Location(aux.getWorld(), aux.getX()+1, aux.getY()+1, aux.getZ()+1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag1).setType(Material.STONE_BRICKS);
+                diag1 =new Location(aux.getWorld(), aux.getX()+1, aux.getY()+2, aux.getZ()+1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag1).setType(Material.STONE_BRICKS);
+                diag1 =new Location(aux.getWorld(), aux.getX()+1, aux.getY()+3, aux.getZ()+1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag1).setType(Material.STONE_BRICKS);
+
+                diag2 =new Location(aux.getWorld(), aux.getX()-1, aux.getY()+1, aux.getZ()+1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag2).setType(Material.STONE_BRICKS);
+                diag2 =new Location(aux.getWorld(), aux.getX()-1, aux.getY()+2, aux.getZ()+1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag2).setType(Material.STONE_BRICKS);
+                diag2 =new Location(aux.getWorld(), aux.getX()-1, aux.getY()+3, aux.getZ()+1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag2).setType(Material.STONE_BRICKS);
+
+                diag3 =new Location(aux.getWorld(), aux.getX()-1, aux.getY()+1, aux.getZ()-1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag3).setType(Material.STONE_BRICKS);
+                diag3 =new Location(aux.getWorld(), aux.getX()-1, aux.getY()+2, aux.getZ()-1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag3).setType(Material.STONE_BRICKS);
+                diag3 =new Location(aux.getWorld(), aux.getX()-1, aux.getY()+3, aux.getZ()-1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag3).setType(Material.STONE_BRICKS);
+
+                diag4 =new Location(aux.getWorld(), aux.getX()+1, aux.getY()+1, aux.getZ()-1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag4).setType(Material.STONE_BRICKS);
+                diag4 =new Location(aux.getWorld(), aux.getX()+1, aux.getY()+2, aux.getZ()-1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag4).setType(Material.STONE_BRICKS);
+                diag4 =new Location(aux.getWorld(), aux.getX()+1, aux.getY()+3, aux.getZ()-1);
+                Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(diag4).setType(Material.STONE_BRICKS);
+
+
+                if(isStart){
+                    Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(aux).setType(Material.GOLD_BLOCK);
+                    locb = new Location(aux.getWorld(), aux.getX()-1, aux.getY()+1, aux.getZ() );
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).setType(Material.AIR);
+                    locb = new Location(aux.getWorld(), aux.getX()-1, aux.getY()+2, aux.getZ() );
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).setType(Material.AIR);
+                    locb = new Location(aux.getWorld(), aux.getX()-1, aux.getY()+3, aux.getZ() );
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locb).setType(Material.AIR);
+                }
+                if(isEnd) {
+                    Bukkit.getWorld(loc.getWorld().getName()).getBlockAt(aux).setType(Material.COAL_BLOCK);
+                    locf = new Location(aux.getWorld(), aux.getX()+1, aux.getY()+1, aux.getZ());
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).setType(Material.AIR);
+                    locf = new Location(aux.getWorld(), aux.getX()+1, aux.getY()+2, aux.getZ());
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).setType(Material.AIR);
+                    locf = new Location(aux.getWorld(), aux.getX()+1, aux.getY()+3, aux.getZ());
+                    Bukkit.getWorld(aux.getWorld().getName()).getBlockAt(locf).setType(Material.AIR);
+                }
+
+                if(j< width-1){
+                    j++;
+                    aux = new Location(aux.getWorld(), aux.getX(),aux.getY(),aux.getZ()+2);
+                    // Bukkit.getPlayer("Nonick").sendMessage(ChatColor.AQUA+""+ "spostandoci di Z+2");
+
+                }else {
+                    // Bukkit.getPlayer("Nonick").sendMessage(ChatColor.RED + "" + "max colonne raggiunto");
+                    if (i < height - 1) {
+                        i++;
+                        j = 0;
+                        aux = new Location(aux.getWorld(), aux.getX() + 2, aux.getY(), aux.getZ() - 2 * (height - 1));
+                        // Bukkit.getPlayer("Nonick").sendMessage(ChatColor.AQUA + "" + "spostandoci di x+2");
+                    } else {
+                        // Bukkit.getPlayer("Nonick").sendMessage(ChatColor.RED + "" + "max righe raggiunto");
+                        return;
+                    }
+                }
+        }
+
     }
 
     public class WriteableMaze
@@ -260,6 +402,5 @@ public class Maze{
         }
 
     }
-
 
 }
